@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    错题记录列表 Item 布局.
+    展示：题目编号、答题时间、双图缩略图、错误提示。
+-->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_medium"
+    android:layout_marginVertical="@dimen/spacing_small"
+    app:cardCornerRadius="@dimen/wrong_item_corner_radius"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_medium">
+
+        <!-- 顶部信息行：题目编号 + 时间 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/spacing_small">
+
+            <TextView
+                android:id="@+id/tv_image_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_category_tag"
+                android:paddingHorizontal="@dimen/spacing_small"
+                android:paddingVertical="2dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption"
+                tools:text="第 1 题" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_caption"
+                android:textColor="@color/color_hint_text"
+                tools:text="06-01 12:30" />
+
+        </LinearLayout>
+
+        <!-- 双图缩略图行 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- 左图 -->
+            <FrameLayout
+                android:layout_width="@dimen/wrong_item_image_size"
+                android:layout_height="@dimen/wrong_item_image_size"
+                android:layout_marginEnd="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:id="@+id/iv_left"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:background="@color/color_divider"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/label_left_image" />
+
+                <!-- 左图标签（AI/真实） -->
+                <TextView
+                    android:id="@+id/tv_left_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="1dp"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    tools:text="AI" />
+
+            </FrameLayout>
+
+            <!-- VS 分隔符 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VS"
+                android:textStyle="bold"
+                android:textColor="@color/color_hint_text"
+                android:layout_marginHorizontal="@dimen/spacing_small" />
+
+            <!-- 右图 -->
+            <FrameLayout
+                android:layout_width="@dimen/wrong_item_image_size"
+                android:layout_height="@dimen/wrong_item_image_size"
+                android:layout_marginStart="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:id="@+id/iv_right"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:background="@color/color_divider"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="@string/label_right_image" />
+
+                <!-- 右图标签（AI/真实） -->
+                <TextView
+                    android:id="@+id/tv_right_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:paddingHorizontal="4dp"
+                    android:paddingVertical="1dp"
+                    android:textColor="@color/white"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    tools:text="真实" />
+
+            </FrameLayout>
+
+            <!-- 错误提示文字 -->
+            <TextView
+                android:id="@+id/tv_error_hint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:textSize="@dimen/text_size_body"
+                android:textColor="@color/color_wrong"
+                tools:text="你选了左图，AI 在右图" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
+

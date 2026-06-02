@@ -5,18 +5,99 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <!-- 挑战页：App 启动后显示的第一个页面（startDestination） -->
+    <!--
+        首页：玩法入口卡片列表（底部导航栏 Tab）
+        → 可导航到：识图挑战页
+    -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.aiethicsquest.presentation.fragment.HomeFragment"
         android:label="@string/nav_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
 
-    <!-- 个人中心页 -->
+        <action
+            android:id="@+id/action_homeFragment_to_imageChallengeFragment"
+            app:destination="@id/imageChallengeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    </fragment>
+
+    <!--
+        识图挑战玩法页（由首页进入）
+    -->
+    <fragment
+        android:id="@+id/imageChallengeFragment"
+        android:name="com.aiethicsquest.presentation.fragment.ImageChallengeFragment"
+        android:label="@string/challenge_page_title"
+        tools:layout="@layout/fragment_image_challenge" />
+
+    <!--
+        个人中心页（底部导航栏 Tab）
+        → 可导航到：错题本页、挑战历史列表页
+    -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.aiethicsquest.presentation.fragment.ProfileFragment"
         android:label="@string/nav_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_profileFragment_to_wrongBookFragment"
+            app:destination="@id/wrongBookFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <action
+            android:id="@+id/action_profileFragment_to_sessionHistoryFragment"
+            app:destination="@id/sessionHistoryFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    </fragment>
+
+    <!--
+        错题本页（由个人中心进入）
+    -->
+    <fragment
+        android:id="@+id/wrongBookFragment"
+        android:name="com.aiethicsquest.presentation.fragment.WrongBookFragment"
+        android:label="@string/wrong_book_title"
+        tools:layout="@layout/fragment_wrong_book" />
+
+    <!--
+        挑战历史列表页（由个人中心进入）
+        → 可导航到：挑战历史详情页
+    -->
+    <fragment
+        android:id="@+id/sessionHistoryFragment"
+        android:name="com.aiethicsquest.presentation.fragment.SessionHistoryFragment"
+        android:label="@string/profile_history_title"
+        tools:layout="@layout/fragment_session_history">
+
+        <action
+            android:id="@+id/action_sessionHistoryFragment_to_sessionDetailFragment"
+            app:destination="@id/sessionDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    </fragment>
+
+    <!--
+        挑战历史详情页（由历史列表页进入）
+    -->
+    <fragment
+        android:id="@+id/sessionDetailFragment"
+        android:name="com.aiethicsquest.presentation.fragment.SessionDetailFragment"
+        android:label="@string/history_detail_title"
+        tools:layout="@layout/fragment_session_detail" />
 
 </navigation>

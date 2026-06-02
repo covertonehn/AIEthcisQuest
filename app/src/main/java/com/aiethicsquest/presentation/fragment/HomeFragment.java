@@ -8,20 +8,25 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.aiethicsquest.R;
 import com.aiethicsquest.databinding.FragmentHomeBinding;
-import com.aiethicsquest.presentation.viewmodel.HomeViewModel;
 
+/**
+ * 首页 Fragment：玩法入口卡片列表.
+ *
+ * <p>展示所有可用的玩法卡片，点击卡片后导航到对应玩法页面。
+ * 目前包含：识图挑战。后续可在此处继续添加更多玩法卡片。</p>
+ */
 public class HomeFragment extends Fragment {
+
     private FragmentHomeBinding binding;
 
-    private HomeViewModel viewModel;
-
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState){
+                             @Nullable Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -29,21 +34,18 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         initViews();
-        observeData();
     }
 
-    private void initViews(){
-        binding.btnIncrement.setOnClickListener(v -> viewModel.increment());
-        binding.btnReset.setOnClickListener(v -> viewModel.reset());
-    }
-
-    private void observeData(){
-        viewModel.getCount().observe(getViewLifecycleOwner(), count -> {
-            binding.tvCount.setText(String.valueOf(count));
-            binding.tvHint.setText(getString(R.string.home_click_hint, count));
-        });
+    /**
+     * 绑定各玩法卡片的点击事件.
+     */
+    private void initViews() {
+        // 识图挑战卡片 → 导航到识图挑战页
+        binding.cardImageChallenge.setOnClickListener(v ->
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_homeFragment_to_imageChallengeFragment)
+        );
     }
 
     @Override
@@ -51,5 +53,4 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }

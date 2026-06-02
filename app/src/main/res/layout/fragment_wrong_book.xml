@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    错题本页面布局.
+    顶部 Tab（目前只有"识图挑战"一栏，后续可扩展），
+    下方为对应玩法的错题列表。
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_background">
+
+    <!-- Tab 栏（使用 TabLayout，方便后续扩展多玩法栏目） -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_card_bg"
+        app:tabMode="scrollable"
+        app:tabGravity="start"
+        app:tabIndicatorColor="@color/purple_500"
+        app:tabSelectedTextColor="@color/purple_500"
+        app:tabTextColor="@color/color_hint_text" />
+
+    <!-- 错题数量 + 清空按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:paddingVertical="@dimen/spacing_small">
+
+        <TextView
+            android:id="@+id/tv_wrong_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/text_size_body"
+            android:textColor="@color/color_hint_text"
+            tools:text="共 3 题" />
+
+        <Button
+            android:id="@+id/btn_clear_wrong"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wrong_book_btn_clear"
+            android:textColor="@color/color_wrong"
+            android:minHeight="@dimen/min_touch_target"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <!-- 空状态 -->
+    <LinearLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wrong_book_empty"
+            android:textSize="@dimen/text_size_subtitle"
+            android:textColor="@color/color_hint_text"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- 错题列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_wrong_answers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/spacing_small"
+        tools:listitem="@layout/item_wrong_answer" />
+
+</LinearLayout>
+

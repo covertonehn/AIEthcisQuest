@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 主题色（待定，暂用 Material 默认蓝紫色系） -->
+    <!-- 主题色：深蓝紫色系，科技感 -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -8,5 +8,29 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- 答题结果颜色 -->
+    <color name="color_correct">#FF4CAF50</color>
+    <color name="color_wrong">#FFF44336</color>
+    <color name="color_correct_bg">#FFE8F5E9</color>
+    <color name="color_wrong_bg">#FFFFEBEE</color>
+
+    <!-- 图片选择边框颜色 -->
+    <color name="color_selected_border">#FF6200EE</color>
+    <color name="color_unselected_border">#FFE0E0E0</color>
+    <color name="color_ai_highlight">#FFFFC107</color>
+
+    <!-- 遮罩标签颜色 -->
+    <color name="color_ai_label_bg">#CCFF6200</color>
+    <color name="color_real_label_bg">#CC4CAF50</color>
+
+    <!-- 进度条 / 背景 -->
+    <color name="color_background">#FFF5F5F5</color>
+    <color name="color_card_bg">#FFFFFFFF</color>
+    <color name="color_divider">#FFE0E0E0</color>
+    <color name="color_hint_text">#FF9E9E9E</color>
+
+    <!-- 图片区域占位背景色（fitCenter 空白区域） -->
+    <color name="color_image_placeholder">#FFE8EAF6</color>
 </resources>
 

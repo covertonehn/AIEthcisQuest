@@ -2,19 +2,106 @@
 <resources>
     <string name="app_name">AIEthicsQuest</string>
 
-    <!-- 底部导航栏-->
-    <string name = "nav_home">挑战</string>
-    <string name = "nav_profile">个人中心</string>
+    <!-- 底部导航栏 -->
+    <string name="nav_home">首页</string>
+    <string name="nav_profile">个人中心</string>
 
-    <!-- HomeFragment -->
-    <string name="home_title">题目挑战</string>
-    <string name="home_click_hint">你已经点击了 %d 次</string>
-    <string name="home_btn_click">点击 +1</string>
-    <string name="home_btn_reset">重置</string>
+    <!-- HomeFragment（玩法入口首页） -->
+    <string name="home_page_title">AI 伦理探索</string>
+    <string name="home_page_subtitle">选择一个玩法，开始挑战</string>
 
-    <!-- ProfileFragment -->
+    <!-- 识图挑战玩法卡片 -->
+    <string name="game_image_challenge_title">识图挑战</string>
+    <string name="game_image_challenge_desc">辨别哪张图片是 AI 生成的，测试你的 AI 识别能力</string>
+    <string name="game_image_challenge_btn">开始挑战</string>
+
+    <!-- ImageChallengeFragment（识图挑战玩法页） -->
+    <string name="challenge_page_title">识图挑战</string>
+    <string name="challenge_subtitle">点击你认为是 AI 生成的图片</string>
+    <string name="challenge_btn_start">开始挑战</string>
+    <string name="challenge_btn_next">下一题</string>
+    <string name="challenge_btn_restart">再来一轮</string>
+    <string name="challenge_progress">第 %1$d 题 / 共 %2$d 题</string>
+    <string name="challenge_loading">正在加载题目…</string>
+    <string name="challenge_no_questions">暂无题目\n请在 assets/ai_images 和 assets/real_images 目录中放置对应数字命名的图片</string>
+
+    <!-- 识图挑战等待页信息 -->
+    <string name="challenge_next_count">本轮题目数：%d 题</string>
+    <string name="challenge_bank_empty_hint">题库已全部做完！</string>
+    <string name="challenge_how_to_play_title">玩法说明</string>
+    <string name="challenge_how_to_play_content">每轮随机出 10 道题（题库不足时有多少出多少）。\n两张图片中，一张是 AI 生成的，一张是真实拍摄的。\n点击你认为是 AI 生成的图片，即可提交答案。\n做过的题不会重复出现，直到你重置题库。</string>
+    <string name="challenge_btn_reset_bank">重置题库</string>
+    <string name="challenge_reset_bank_title">重置题库</string>
+    <string name="challenge_reset_bank_msg">重置后，所有题目将重新开始，包括已做过的题。确定重置吗？</string>
+    <string name="challenge_reset_bank_ok">重置</string>
+    <string name="challenge_reset_bank_cancel">取消</string>
+    <string name="challenge_remaining">剩余未做：%d 题</string>
+
+    <!-- 题库耗尽对话框 -->
+    <string name="no_more_questions_title">题库已用尽</string>
+    <string name="no_more_questions_msg">所有 %d 道题目都已经做过了！\n可以重置题库从头再来，或返回主页。</string>
+    <string name="no_more_questions_reset">重置题库</string>
+    <string name="no_more_questions_back">返回主页</string>
+
+    <!-- 答题结果反馈 -->
+    <string name="result_correct">✓ 答对了！</string>
+    <string name="result_wrong">✗ 答错了！</string>
+    <string name="result_correct_hint">你的 AI 识别能力很强！</string>
+    <string name="result_wrong_hint">AI 生成的是另一张，再仔细观察吧！</string>
+    <string name="result_ai_label">AI 生成</string>
+    <string name="result_real_label">真实拍摄</string>
+
+    <!-- 会话结束 -->
+    <string name="session_complete_title">本轮挑战结束！</string>
+    <string name="session_complete_score">答对 %1$d / %2$d 题</string>
+    <string name="session_complete_accuracy">正确率 %s%%</string>
+    <string name="session_complete_excellent">太厉害了！全部答对！</string>
+    <string name="session_complete_good">不错！继续加油！</string>
+    <string name="session_complete_keep_trying">多练习，你会更厉害的！</string>
+
+    <!-- ProfileFragment（个人中心） -->
     <string name="profile_title">个人中心</string>
     <string name="profile_greeting">你好，%s！</string>
     <string name="profile_default_name">探索者</string>
+    <string name="profile_wrong_book_entry_title">错题本</string>
+    <string name="profile_wrong_book_entry_desc">查看你答错的题目，复习巩固</string>
+    <string name="profile_wrong_book_entry_count">共 %d 道错题</string>
+    <string name="profile_wrong_book_entry_empty">暂无错题</string>
+
+    <!-- 历史记录 -->
+    <string name="profile_history_title">挑战历史</string>
+    <string name="profile_history_empty">暂无挑战记录，快去开始挑战吧！</string>
+    <string name="profile_history_entry_count">共 %d 轮挑战</string>
+    <string name="profile_history_entry_empty">暂无挑战记录</string>
+    <string name="history_accuracy">正确率 %s%%</string>
+    <string name="history_score">%1$d / %2$d 题</string>
+    <string name="history_session_count">共 %d 轮挑战</string>
+    <string name="history_detail_title">本轮详情</string>
+    <string name="detail_answer_correct_hint">✓ 答对了\nAI 在%s</string>
+    <string name="detail_answer_wrong_hint">✗ 答错了\nAI 在%s</string>
+
+    <!-- WrongBookFragment（错题本页面） -->
+    <string name="wrong_book_title">错题本</string>
+    <string name="wrong_book_tab_image_challenge">识图挑战</string>
+    <string name="wrong_book_empty">暂无错题记录，继续加油！</string>
+    <string name="wrong_book_btn_clear">清空错题</string>
+    <string name="wrong_book_clear_confirm_title">确认清空</string>
+    <string name="wrong_book_clear_confirm_msg">确认清空识图挑战的所有错题记录吗？此操作不可撤销。</string>
+    <string name="wrong_book_clear_confirm_ok">清空</string>
+    <string name="wrong_book_clear_confirm_cancel">取消</string>
+    <string name="wrong_book_count">共 %d 题</string>
+
+    <!-- 错题列表 Item -->
+    <string name="wrong_item_image_index">第 %d 题</string>
+    <string name="wrong_item_answer_left">你选了上图，AI 在下图</string>
+    <string name="wrong_item_answer_right">你选了下图，AI 在上图</string>
+
+    <!-- 通用 -->
+    <string name="btn_confirm">确认</string>
+    <string name="btn_back_home">返回主页</string>
+    <string name="label_left_image">上图</string>
+    <string name="label_right_image">下图</string>
+    <string name="label_top_image">上图</string>
+    <string name="label_bottom_image">下图</string>
 </resources>
 

@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.cardview)
 
     // Lifecycle (ViewModel + LiveData + Runtime)
     implementation(libs.androidx.lifecycle.viewmodel)

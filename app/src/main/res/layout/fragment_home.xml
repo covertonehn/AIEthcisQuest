@@ -1,55 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    首页布局：玩法入口卡片列表。
+    每个玩法以卡片形式展示，点击进入对应玩法页面。
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/spacing_large">
+    android:background="@color/color_background">
 
-    <TextView
-        android:id="@+id/tv_home_title"
-        android:layout_width="wrap_content"
+    <!-- 页面标题区 -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/home_title"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="@dimen/spacing_xlarge"/>
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/spacing_medium"
+        android:paddingTop="@dimen/spacing_large"
+        android:paddingBottom="@dimen/spacing_medium">
 
-    <TextView
-        android:id="@+id/tv_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        android:textColor="?attr/colorPrimary"
-        android:layout_marginBottom="@dimen/spacing_large"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_page_title"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/home_btn_click"
-        android:textSize="14sp"
-        android:layout_marginBottom="@dimen/spacing_xlarge"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xsmall"
+            android:text="@string/home_page_subtitle"
+            android:textColor="@color/color_hint_text"
+            android:textSize="@dimen/text_size_body" />
 
-    <Button
-        android:id="@+id/btn_increment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="@dimen/min_touch_target"
-        android:minHeight="@dimen/min_touch_target"
-        android:text="@string/home_btn_click"
-        android:layout_marginBottom="@dimen/spacing_medium"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_reset"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="@dimen/min_touch_target"
-        android:minHeight="@dimen/min_touch_target"
-        android:text="@string/home_btn_reset"/>
+    <!-- 玩法卡片列表（ScrollView 包裹，方便后续增加更多玩法） -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/spacing_medium"
+            android:paddingBottom="@dimen/spacing_large">
+
+            <!-- 识图挑战卡片 -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_image_challenge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_large"
+                    android:gravity="center_vertical">
+
+                    <!-- 图标区域 -->
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:gravity="center"
+                        android:text="🖼️"
+                        android:textSize="28sp"
+                        android:background="@drawable/bg_game_icon"
+                        android:layout_marginEnd="@dimen/spacing_medium" />
+
+                    <!-- 文字区域 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/game_image_challenge_title"
+                            android:textSize="@dimen/text_size_subtitle"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="@dimen/spacing_xsmall" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/game_image_challenge_desc"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/color_hint_text"
+                            android:maxLines="2" />
+
+                    </LinearLayout>
+
+                    <!-- 箭头 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textSize="24sp"
+                        android:textColor="@color/color_hint_text"
+                        android:layout_marginStart="@dimen/spacing_small" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!--
+                后续可在此处继续添加其他玩法卡片，
+                例如：文字判断、音频辨别等
+            -->
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
