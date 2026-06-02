@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AIEthicsQuest</string>
+
+    <!-- 底部导航栏-->
+    <string name = "nav_home">挑战</string>
+    <string name = "nav_profile">个人中心</string>
+
+    <!-- HomeFragment -->
+    <string name="home_title">题目挑战</string>
+    <string name="home_click_hint">你已经点击了 %d 次</string>
+    <string name="home_btn_click">点击 +1</string>
+    <string name="home_btn_reset">重置</string>
+
+    <!-- ProfileFragment -->
+    <string name="profile_title">个人中心</string>
+    <string name="profile_greeting">你好，%s！</string>
+    <string name="profile_default_name">探索者</string>
 </resources>
 

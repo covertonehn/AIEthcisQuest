@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- 挑战页：App 启动后显示的第一个页面（startDestination） -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.aiethicsquest.presentation.fragment.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home" />
+
+    <!-- 个人中心页 -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.aiethicsquest.presentation.fragment.ProfileFragment"
+        android:label="@string/nav_profile"
+        tools:layout="@layout/fragment_profile" />
+
+</navigation>

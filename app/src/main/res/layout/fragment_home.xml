@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_large">
+
+    <TextView
+        android:id="@+id/tv_home_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/spacing_xlarge"/>
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginBottom="@dimen/spacing_large"/>
+
+    <TextView
+        android:id="@+id/tv_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/home_btn_click"
+        android:textSize="14sp"
+        android:layout_marginBottom="@dimen/spacing_xlarge"/>
+
+    <Button
+        android:id="@+id/btn_increment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/min_touch_target"
+        android:minHeight="@dimen/min_touch_target"
+        android:text="@string/home_btn_click"
+        android:layout_marginBottom="@dimen/spacing_medium"/>
+
+    <Button
+        android:id="@+id/btn_reset"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/min_touch_target"
+        android:minHeight="@dimen/min_touch_target"
+        android:text="@string/home_btn_reset"/>
+
+</LinearLayout>
