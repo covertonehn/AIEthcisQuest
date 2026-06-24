@@ -118,6 +118,73 @@
 
             </androidx.cardview.widget.CardView>
 
+            <!-- 视频挑战卡片 -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_video_challenge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_large"
+                    android:gravity="center_vertical">
+
+                    <!-- 图标区域 -->
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:gravity="center"
+                        android:text="🎬"
+                        android:textSize="28sp"
+                        android:background="@drawable/bg_game_icon"
+                        android:layout_marginEnd="@dimen/spacing_medium" />
+
+                    <!-- 文字区域 -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/game_video_challenge_title"
+                            android:textSize="@dimen/text_size_subtitle"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="@dimen/spacing_xsmall" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/game_video_challenge_desc"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/color_hint_text"
+                            android:maxLines="2" />
+
+                    </LinearLayout>
+
+                    <!-- 箭头 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textSize="24sp"
+                        android:textColor="@color/color_hint_text"
+                        android:layout_marginStart="@dimen/spacing_small" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
             <!--
                 后续可在此处继续添加其他玩法卡片，
                 例如：文字判断、音频辨别等

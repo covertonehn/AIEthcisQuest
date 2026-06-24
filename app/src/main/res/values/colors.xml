@@ -19,6 +19,8 @@
     <color name="color_selected_border">#FF6200EE</color>
     <color name="color_unselected_border">#FFE0E0E0</color>
     <color name="color_ai_highlight">#FFFFC107</color>
+    <!-- 海胆选择悬停高亮（绿色边框） -->
+    <color name="color_highlight_border">#FF00C853</color>
 
     <!-- 遮罩标签颜色 -->
     <color name="color_ai_label_bg">#CCFF6200</color>

@@ -69,7 +69,7 @@
     <string name="profile_wrong_book_entry_empty">暂无错题</string>
 
     <!-- 历史记录 -->
-    <string name="profile_history_title">挑战历史</string>
+    <string name="profile_history_title">识图挑战历史</string>
     <string name="profile_history_empty">暂无挑战记录，快去开始挑战吧！</string>
     <string name="profile_history_entry_count">共 %d 轮挑战</string>
     <string name="profile_history_entry_empty">暂无挑战记录</string>
@@ -80,6 +80,81 @@
     <string name="detail_answer_correct_hint">✓ 答对了\nAI 在%s</string>
     <string name="detail_answer_wrong_hint">✗ 答错了\nAI 在%s</string>
 
+    <!-- 视频挑战玩法卡片（HomeFragment） -->
+    <string name="game_video_challenge_title">视频挑战</string>
+    <string name="game_video_challenge_desc">辨别哪段视频是 AI 生成的，挑战你的 AI 识别能力</string>
+
+    <!-- VideoChallengeFragment（视频挑战玩法页） -->
+    <string name="video_challenge_page_title">视频挑战</string>
+    <string name="video_challenge_subtitle">点击你认为是 AI 生成的视频</string>
+    <string name="video_challenge_btn_start">开始挑战</string>
+    <string name="video_challenge_btn_next">下一题</string>
+    <string name="video_challenge_btn_restart">再来一轮</string>
+    <string name="video_challenge_progress">第 %1$d 题 / 共 %2$d 题</string>
+    <string name="video_challenge_loading">正在加载题目…</string>
+    <string name="video_challenge_no_questions">暂无视频题目\n请在 assets/ai_videos 和 assets/real_videos 目录中放置对应数字命名的视频</string>
+    <string name="video_challenge_next_count">本轮题目数：%d 题</string>
+    <string name="video_challenge_bank_empty_hint">视频题库已全部做完！</string>
+    <string name="video_challenge_how_to_play_title">玩法说明</string>
+    <string name="video_challenge_how_to_play_content">每轮随机出 10 道视频题（题库不足时有多少出多少）。\n两段视频中，一段是 AI 生成的，一段是真实录制的。\n点击你认为是 AI 生成的视频，即可提交答案。\n做过的题不会重复出现，直到你重置题库。</string>
+    <string name="video_challenge_btn_reset_bank">重置题库</string>
+    <string name="video_challenge_reset_bank_title">重置题库</string>
+    <string name="video_challenge_reset_bank_msg">重置后，所有视频题目将重新开始，包括已做过的题。确定重置吗？</string>
+    <string name="video_challenge_reset_bank_ok">重置</string>
+    <string name="video_challenge_reset_bank_cancel">取消</string>
+    <string name="video_challenge_remaining">剩余未做：%d 题</string>
+    <string name="video_challenge_tap_to_play">点击播放视频</string>
+    <string name="video_challenge_ai_label">AI 生成</string>
+    <string name="video_challenge_real_label">真实录制</string>
+
+    <!-- 视频挑战答题结果 -->
+    <string name="video_result_correct">✓ 答对了！</string>
+    <string name="video_result_wrong">✗ 答错了！</string>
+    <string name="video_result_correct_hint">你的 AI 识别能力很强！</string>
+    <string name="video_result_wrong_hint">AI 生成的是另一段，再仔细观察吧！</string>
+    <string name="video_result_ai_label">AI 生成</string>
+    <string name="video_result_real_label">真实录制</string>
+
+    <!-- 视频挑战题库耗尽对话框 -->
+    <string name="video_no_more_questions_title">题库已用尽</string>
+    <string name="video_no_more_questions_msg">所有 %d 道视频题目都已经做过了！\n可以重置题库从头再来，或返回主页。</string>
+    <string name="video_no_more_questions_reset">重置题库</string>
+    <string name="video_no_more_questions_back">返回主页</string>
+
+    <!-- 视频挑战历史记录（ProfileFragment） -->
+    <string name="profile_video_history_title">视频挑战历史</string>
+    <string name="profile_video_history_entry_count">共 %d 轮挑战</string>
+    <string name="profile_video_history_entry_empty">暂无视频挑战记录</string>
+
+    <!-- 视频挑战历史列表页 -->
+    <string name="video_history_detail_title">本轮视频详情</string>
+
+    <!-- 错题本 Tab -->
+    <string name="wrong_book_tab_video_challenge">视频挑战</string>
+
+    <!-- 视频错题 Item -->
+    <string name="video_wrong_item_index">第 %d 题</string>
+    <string name="video_wrong_item_answer_top">你选了上方视频，AI 在下方</string>
+    <string name="video_wrong_item_answer_bottom">你选了下方视频，AI 在上方</string>
+    <string name="video_wrong_item_btn_replay">重播视频</string>
+
+    <!-- 视频挑战会话结束 -->
+    <string name="video_session_complete_title">本轮挑战结束！</string>
+    <string name="video_session_complete_score">答对 %1$d / %2$d 题</string>
+    <string name="video_session_complete_accuracy">正确率 %s%%</string>
+    <string name="video_session_complete_excellent">太厉害了！全部答对！</string>
+    <string name="video_session_complete_good">不错！继续加油！</string>
+    <string name="video_session_complete_keep_trying">多练习，你会更厉害的！</string>
+
+    <!-- 视频播放器 -->
+    <string name="video_player_fullscreen">全屏播放</string>
+    <string name="video_player_exit_fullscreen">退出全屏</string>
+    <string name="video_play_hint">播放视频</string>
+    <string name="video_play_pause_hint">播放/暂停</string>
+    <string name="video_fullscreen_hint">全屏播放</string>
+    <string name="video_fullscreen_title">视频全屏播放</string>
+    <string name="video_exit_fullscreen_hint">退出全屏</string>
+
     <!-- WrongBookFragment（错题本页面） -->
     <string name="wrong_book_title">错题本</string>
     <string name="wrong_book_tab_image_challenge">识图挑战</string>
@@ -87,6 +162,7 @@
     <string name="wrong_book_btn_clear">清空错题</string>
     <string name="wrong_book_clear_confirm_title">确认清空</string>
     <string name="wrong_book_clear_confirm_msg">确认清空识图挑战的所有错题记录吗？此操作不可撤销。</string>
+    <string name="wrong_book_clear_confirm_msg_video">确认清空视频挑战的所有错题记录吗？此操作不可撤销。</string>
     <string name="wrong_book_clear_confirm_ok">清空</string>
     <string name="wrong_book_clear_confirm_cancel">取消</string>
     <string name="wrong_book_count">共 %d 题</string>
@@ -96,6 +172,12 @@
     <string name="wrong_item_answer_left">你选了上图，AI 在下图</string>
     <string name="wrong_item_answer_right">你选了下图，AI 在上图</string>
 
+    <!-- 挑战中途退出确认弹窗 -->
+    <string name="quit_session_title">放弃本轮挑战？</string>
+    <string name="quit_session_msg">本轮挑战未完成，退出后进度不会保存，且已答题目不会从题库中去除。是否退出？</string>
+    <string name="quit_session_confirm">确认退出</string>
+    <string name="quit_session_cancel">继续挑战</string>
+
     <!-- 通用 -->
     <string name="btn_confirm">确认</string>
     <string name="btn_back_home">返回主页</string>
@@ -103,5 +185,9 @@
     <string name="label_right_image">下图</string>
     <string name="label_top_image">上图</string>
     <string name="label_bottom_image">下图</string>
+    <string name="label_top_video">上方视频</string>
+    <string name="label_bottom_video">下方视频</string>
+    <string name="label_ai_generated">AI 生成</string>
+    <string name="label_real_content">真实内容</string>
 </resources>
 

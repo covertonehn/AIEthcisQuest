@@ -123,7 +123,10 @@ public class ChallengeViewModel extends AndroidViewModel {
     // ---------- 公开业务方法 ----------
 
     /**
-     * 开始新一轮挑战：随机取未做题，标记已做，从第一题开始.
+     * 开始新一轮挑战：随机取未做题，从第一题开始.
+     *
+     * <p>★ 本方法不再提前将题目标记为已做；只有完整答完一轮（{@link #nextQuestion}
+     * 推进到最后一题）才会真正标记，从而确保中途退出不影响题库状态。</p>
      */
     public void startNewSession() {
         isLoading.setValue(true);
@@ -145,13 +148,7 @@ public class ChallengeViewModel extends AndroidViewModel {
                 return;
             }
 
-            // 将本轮题目标记为已做，避免下一轮重复出现
-            List<Integer> ids = new ArrayList<>();
-            for (QuizQuestion q : questions) {
-                ids.add(q.getId());
-            }
-            AppDatabase.getInstance(getApplication()).quizQuestionDao().markAsDone(ids);
-
+            // ★ 不再提前 markAsDone；等到轮次正常结束时再标记
             sessionQuestions = questions;
             isLoading.postValue(false);
             quizProgress.postValue(new QuizProgress(1, sessionQuestions.size()));
@@ -179,16 +176,35 @@ public class ChallengeViewModel extends AndroidViewModel {
     }
 
     /**
-     * 前进到下一题；若已是最后一题则发出完成事件并保存轮次记录.
+     * 前进到下一题；若已是最后一题则标记本轮题目为已做、保存轮次记录并发出完成事件.
+     *
+     * <p>只有在此方法触发"轮次完成"分支时，才把本轮题目标记为已做（从题库中去除）。
+     * 若用户中途退出，题目不会被标记，下轮可以再次抽到。</p>
      */
     public void nextQuestion() {
         currentIndex++;
         if (currentIndex >= sessionQuestions.size()) {
+            // ★ 轮次正常完成：将本轮所有题目标记为已做
+            markSessionQuestionsAsDone();
             saveSessionRecord();
             sessionComplete.setValue(correctCount);
         } else {
             quizProgress.setValue(new QuizProgress(currentIndex + 1, sessionQuestions.size()));
             currentQuestion.setValue(sessionQuestions.get(currentIndex));
+        }
+    }
+
+    /**
+     * 将本轮的所有题目标记为已做（在后台线程执行）.
+     */
+    private void markSessionQuestionsAsDone() {
+        List<Integer> ids = new ArrayList<>();
+        for (QuizQuestion q : sessionQuestions) {
+            ids.add(q.getId());
+        }
+        if (!ids.isEmpty()) {
+            AppDatabase.DB_EXECUTOR.execute(() ->
+                    AppDatabase.getInstance(getApplication()).quizQuestionDao().markAsDone(ids));
         }
     }
 
@@ -218,6 +234,27 @@ public class ChallengeViewModel extends AndroidViewModel {
      */
     public void consumeNoMoreQuestions() {
         noMoreQuestions.setValue(null);
+    }
+
+    /**
+     * 判断当前是否正在进行一轮挑战（已有题目在进行中，尚未完成）.
+     *
+     * <p>用于 Fragment 判断是否需要弹出"未完成退出"确认框。</p>
+     *
+     * @return true=正在进行中（已有题目加载但还未答完最后一题）
+     */
+    public boolean isSessionInProgress() {
+        return !sessionQuestions.isEmpty();
+    }
+
+    /**
+     * 放弃当前轮次（中途退出），不保存记录，不标记题目为已做.
+     *
+     * <p>等同于 {@link #resetSession}，但语义更明确：
+     * 题目不会被从题库中去除，下一轮可以重新抽到。</p>
+     */
+    public void abandonSession() {
+        resetSession();
     }
 
     /**

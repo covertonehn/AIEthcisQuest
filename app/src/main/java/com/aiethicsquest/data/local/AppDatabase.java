@@ -12,6 +12,9 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.aiethicsquest.data.model.QuizQuestion;
 import com.aiethicsquest.data.model.SessionRecord;
+import com.aiethicsquest.data.model.VideoQuestion;
+import com.aiethicsquest.data.model.VideoSessionRecord;
+import com.aiethicsquest.data.model.VideoWrongAnswer;
 import com.aiethicsquest.data.model.WrongAnswer;
 
 import java.io.IOException;
@@ -26,17 +29,31 @@ import java.util.concurrent.Executors;
 /**
  * Room 数据库单例类.
  *
- * <p>包含 quiz_questions 和 wrong_answers 两张表。</p>
+ * <p>包含以下表：</p>
+ * <ul>
+ *     <li>quiz_questions — 识图挑战题目</li>
+ *     <li>wrong_answers — 识图挑战错题记录</li>
+ *     <li>session_records — 识图挑战轮次记录</li>
+ *     <li>video_questions — 视频挑战题目</li>
+ *     <li>video_wrong_answers — 视频挑战错题记录</li>
+ *     <li>video_session_records — 视频挑战轮次记录</li>
+ * </ul>
  *
- * <p>题目数据来源：扫描 assets/ai_images/ 和 assets/real_images/ 目录，
- * 取两个目录中数字编号的交集，每道题由系统随机决定 AI 图放左侧还是右侧。</p>
+ * <p>题目数据来源：扫描 assets/ai_images/、assets/real_images/、
+ * assets/ai_videos/、assets/real_videos/ 目录，取各类型目录中数字编号的交集。</p>
  *
- * <p>数据库版本升级到 2（数据模型结构变更：移除 category/image_left_res_name 等旧字段，
- * 改用 imageIndex）。升级策略为 fallbackToDestructiveMigration，即清空重建。</p>
+ * <p>升级策略为 fallbackToDestructiveMigration，开发阶段直接清空重建。</p>
  */
 @Database(
-        entities = {QuizQuestion.class, WrongAnswer.class, SessionRecord.class},
-        version = 5,
+        entities = {
+                QuizQuestion.class,
+                WrongAnswer.class,
+                SessionRecord.class,
+                VideoQuestion.class,
+                VideoWrongAnswer.class,
+                VideoSessionRecord.class
+        },
+        version = 6,
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -48,6 +65,10 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final String AI_IMAGES_DIR = "ai_images";
     /** 真实图片所在 assets 子目录. */
     public static final String REAL_IMAGES_DIR = "real_images";
+    /** AI 视频所在 assets 子目录. */
+    public static final String AI_VIDEOS_DIR = "ai_videos";
+    /** 真实视频所在 assets 子目录. */
+    public static final String REAL_VIDEOS_DIR = "real_videos";
 
     private static volatile AppDatabase instance;
     private static Context appContext;
@@ -60,6 +81,12 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract WrongAnswerDao wrongAnswerDao();
 
     public abstract SessionRecordDao sessionRecordDao();
+
+    public abstract VideoQuestionDao videoQuestionDao();
+
+    public abstract VideoWrongAnswerDao videoWrongAnswerDao();
+
+    public abstract VideoSessionRecordDao videoSessionRecordDao();
 
     /**
      * 获取数据库单例（线程安全）.
@@ -90,41 +117,41 @@ public abstract class AppDatabase extends RoomDatabase {
     /**
      * 数据库首次创建时预填充题目数据的回调.
      *
-     * <p>自动扫描 assets/ai_images/ 和 assets/real_images/ 目录，
-     * 取两目录中文件名数字编号的交集，为每道题随机分配 AI 图的左右位置。</p>
+     * <p>同时预填充识图挑战（图片）和视频挑战（视频）的题目。</p>
+     *
+     * <p>注意：Room 的 onCreate 在 build() 内部同步调用，此时 instance 字段尚未赋值，
+     * 因此不能在 onCreate 中直接引用 instance。正确做法是在 onOpen 中执行预填充，
+     * onOpen 在每次打开数据库时触发，通过 getCount() == 0 的幂等判断保证只执行一次。</p>
      */
     private static class PrepopulateCallback extends Callback {
 
         @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
+        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+            super.onOpen(db);
             DB_EXECUTOR.execute(() -> {
                 if (instance != null && appContext != null) {
-                    prepopulateQuestions(instance.quizQuestionDao(), appContext);
+                    prepopulateImageQuestions(instance.quizQuestionDao(), appContext);
+                    prepopulateVideoQuestions(instance.videoQuestionDao(), appContext);
                 }
             });
         }
 
+        // ---------- 识图挑战题目预填充 ----------
+
         /**
-         * 扫描 assets 目录，生成题目列表并写入数据库.
+         * 扫描 assets/ai_images/ 和 assets/real_images/，生成识图挑战题目列表.
          *
-         * @param dao     题目 DAO
-         * @param context Application Context
+         * <p>支持 .jpg、.jpeg、.png 格式，文件名必须是纯数字，如 1.png、2.jpg。</p>
          */
-        /**
-         * 扫描 assets 目录，生成题目列表并写入数据库.
-         *
-         * <p>扫描 ai_images 和 real_images，取数字编号交集，
-         * 存储完整文件名（含扩展名），支持 jpg/jpeg/png 混用。</p>
-         */
-        private void prepopulateQuestions(QuizQuestionDao dao, Context context) {
+        private void prepopulateImageQuestions(QuizQuestionDao dao, Context context) {
             if (dao.getCount() > 0) {
                 return;
             }
 
-            // key=数字编号, value=完整文件名（如 "1.png"）
-            Map<Integer, String> aiFiles = listImageFiles(context.getAssets(), AI_IMAGES_DIR);
-            Map<Integer, String> realFiles = listImageFiles(context.getAssets(), REAL_IMAGES_DIR);
+            Map<Integer, String> aiFiles = listFiles(context.getAssets(), AI_IMAGES_DIR,
+                    new String[]{"jpg", "jpeg", "png"});
+            Map<Integer, String> realFiles = listFiles(context.getAssets(), REAL_IMAGES_DIR,
+                    new String[]{"jpg", "jpeg", "png"});
 
             if (aiFiles.isEmpty() || realFiles.isEmpty()) {
                 Log.w(TAG, "未找到图片，请在 assets/ai_images/ 和 assets/real_images/ 中放置数字命名的图片");
@@ -134,17 +161,14 @@ public abstract class AppDatabase extends RoomDatabase {
             Random random = new Random();
             List<QuizQuestion> questions = new ArrayList<>();
 
-            // 取两目录中数字编号的交集
             for (Map.Entry<Integer, String> aiEntry : aiFiles.entrySet()) {
                 int index = aiEntry.getKey();
-                if (!realFiles.containsKey(index)) {
-                    continue; // real_images 中没有对应编号，跳过
-                }
+                if (!realFiles.containsKey(index)) continue;
                 int aiSide = random.nextInt(2);
                 questions.add(new QuizQuestion(
                         index,
-                        aiEntry.getValue(),       // AI 图完整文件名，如 "1.png"
-                        realFiles.get(index),     // 真实图完整文件名，如 "1.png"
+                        aiEntry.getValue(),
+                        realFiles.get(index),
                         aiSide,
                         "这两张图片，哪张是 AI 生成的？"
                 ));
@@ -156,20 +180,71 @@ public abstract class AppDatabase extends RoomDatabase {
             }
 
             dao.insertAll(questions);
-            Log.d(TAG, "预填充题目完成，共 " + questions.size() + " 道题");
+            Log.d(TAG, "识图挑战题目预填充完成，共 " + questions.size() + " 道题");
         }
 
+        // ---------- 视频挑战题目预填充 ----------
+
         /**
-         * 列出指定 assets 目录中所有图片，返回 {数字编号 -> 完整文件名} 的 Map.
+         * 扫描 assets/ai_videos/ 和 assets/real_videos/，生成视频挑战题目列表.
          *
-         * <p>支持 .jpg、.jpeg、.png 格式，文件名必须是纯数字，如 1.png、2.jpg。
+         * <p>支持 .mp4、.webm、.3gp 格式，文件名必须是纯数字，如 1.mp4。</p>
+         */
+        private void prepopulateVideoQuestions(VideoQuestionDao dao, Context context) {
+            if (dao.getCount() > 0) {
+                return;
+            }
+
+            Map<Integer, String> aiFiles = listFiles(context.getAssets(), AI_VIDEOS_DIR,
+                    new String[]{"mp4", "webm", "3gp"});
+            Map<Integer, String> realFiles = listFiles(context.getAssets(), REAL_VIDEOS_DIR,
+                    new String[]{"mp4", "webm", "3gp"});
+
+            if (aiFiles.isEmpty() || realFiles.isEmpty()) {
+                Log.w(TAG, "未找到视频，请在 assets/ai_videos/ 和 assets/real_videos/ 中放置数字命名的视频");
+                return;
+            }
+
+            Random random = new Random();
+            List<VideoQuestion> questions = new ArrayList<>();
+
+            for (Map.Entry<Integer, String> aiEntry : aiFiles.entrySet()) {
+                int index = aiEntry.getKey();
+                if (!realFiles.containsKey(index)) continue;
+                int aiSide = random.nextInt(2);
+                questions.add(new VideoQuestion(
+                        index,
+                        aiEntry.getValue(),
+                        realFiles.get(index),
+                        aiSide,
+                        "这两段视频，哪段是 AI 生成的？"
+                ));
+            }
+
+            if (questions.isEmpty()) {
+                Log.w(TAG, "ai_videos 和 real_videos 中没有同编号的视频对");
+                return;
+            }
+
+            dao.insertAll(questions);
+            Log.d(TAG, "视频挑战题目预填充完成，共 " + questions.size() + " 道题");
+        }
+
+        // ---------- 通用工具方法 ----------
+
+        /**
+         * 列出指定 assets 目录中所有匹配扩展名的文件，返回 {数字编号 -> 完整文件名} 的 Map.
+         *
+         * <p>文件名必须是纯数字（含扩展名），如 1.mp4、2.png。
          * 若同一数字有多个格式，取遍历到的第一个。</p>
          *
-         * @param assets    AssetManager
-         * @param directory assets 子目录名
+         * @param assets     AssetManager
+         * @param directory  assets 子目录名
+         * @param extensions 允许的文件扩展名（小写）
          * @return {编号 -> 文件名} Map
          */
-        private Map<Integer, String> listImageFiles(AssetManager assets, String directory) {
+        private Map<Integer, String> listFiles(AssetManager assets, String directory,
+                                               String[] extensions) {
             Map<Integer, String> result = new HashMap<>();
             try {
                 String[] files = assets.list(directory);
@@ -178,13 +253,17 @@ public abstract class AppDatabase extends RoomDatabase {
                     int dotIndex = file.lastIndexOf('.');
                     if (dotIndex <= 0) continue;
                     String ext = file.substring(dotIndex + 1).toLowerCase();
-                    if (!ext.equals("jpg") && !ext.equals("jpeg") && !ext.equals("png")) {
-                        continue;
+                    boolean matched = false;
+                    for (String e : extensions) {
+                        if (e.equals(ext)) {
+                            matched = true;
+                            break;
+                        }
                     }
+                    if (!matched) continue;
                     String name = file.substring(0, dotIndex);
                     try {
                         int index = Integer.parseInt(name);
-                        // 同编号有多个格式时取第一个（不重复添加）
                         result.putIfAbsent(index, file);
                     } catch (NumberFormatException e) {
                         Log.w(TAG, "跳过非数字命名文件：" + directory + "/" + file);

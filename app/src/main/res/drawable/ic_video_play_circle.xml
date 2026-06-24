@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="56"
+    android:viewportHeight="56">
+    <!-- 圆形背景 -->
+    <path
+        android:fillColor="#CC000000"
+        android:pathData="M28,28m-28,0a28,28 0,1 1,56 0a28,28 0,1 1,-56 0" />
+    <!-- 播放三角形 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M22,18l16,10l-16,10z" />
+</vector>
+

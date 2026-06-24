@@ -36,7 +36,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        // 使用 Activity 作用域，与 WrongBookFragment 等共享同一 ViewModel 实例
+        viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         initViews();
         observeData();
     }
@@ -48,10 +49,16 @@ public class ProfileFragment extends Fragment {
                         .navigate(R.id.action_profileFragment_to_wrongBookFragment)
         );
 
-        // 挑战历史入口卡片
+        // 识图挑战历史入口卡片
         binding.cardChallengeHistory.setOnClickListener(v ->
                 Navigation.findNavController(v)
                         .navigate(R.id.action_profileFragment_to_sessionHistoryFragment)
+        );
+
+        // 视频挑战历史入口卡片
+        binding.cardVideoHistory.setOnClickListener(v ->
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_profileFragment_to_videoSessionHistoryFragment)
         );
     }
 
@@ -61,7 +68,7 @@ public class ProfileFragment extends Fragment {
                 binding.tvGreeting.setText(getString(R.string.profile_greeting, name))
         );
 
-        // 错题总数
+        // 识图挑战错题总数
         viewModel.getWrongAnswerCount().observe(getViewLifecycleOwner(), count -> {
             if (count == null) count = 0;
             if (count > 0) {
@@ -73,7 +80,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // 挑战历史轮次总数
+        // 识图挑战历史轮次总数
         viewModel.getSessionRecords().observe(getViewLifecycleOwner(), records -> {
             int count = (records == null) ? 0 : records.size();
             if (count > 0) {
@@ -81,6 +88,18 @@ public class ProfileFragment extends Fragment {
                         getString(R.string.profile_history_entry_count, count));
             } else {
                 binding.tvHistoryCount.setText(
+                        getString(R.string.profile_history_entry_empty));
+            }
+        });
+
+        // 视频挑战历史轮次总数
+        viewModel.getVideoSessionRecords().observe(getViewLifecycleOwner(), records -> {
+            int count = (records == null) ? 0 : records.size();
+            if (count > 0) {
+                binding.tvVideoHistoryCount.setText(
+                        getString(R.string.profile_history_entry_count, count));
+            } else {
+                binding.tvVideoHistoryCount.setText(
                         getString(R.string.profile_history_entry_empty));
             }
         });

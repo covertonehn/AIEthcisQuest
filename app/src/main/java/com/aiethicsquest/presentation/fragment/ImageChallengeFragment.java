@@ -1,5 +1,6 @@
 package com.aiethicsquest.presentation.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +16,19 @@ import com.aiethicsquest.R;
 import com.aiethicsquest.common.util.ImageLoader;
 import com.aiethicsquest.data.model.QuizQuestion;
 import com.aiethicsquest.databinding.FragmentImageChallengeBinding;
+import com.aiethicsquest.presentation.activity.ImageViewerActivity;
+import com.aiethicsquest.presentation.activity.SeaUrchinSelectView;
 import com.aiethicsquest.presentation.viewmodel.ChallengeViewModel;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 /**
  * 识图挑战玩法页 Fragment.
  *
- * <p>页面有两种主要状态：</p>
+ * <p>交互方式：</p>
  * <ul>
- *     <li><b>等待状态</b>：显示玩法说明、本轮题目数、重置按钮、开始按钮</li>
- *     <li><b>答题状态</b>：显示进度、双图、结果反馈、下一题按钮</li>
+ *     <li>点击图片 → 全屏查看（{@link ImageViewerActivity}）</li>
+ *     <li>底部海胆选择控件：长按后滑向上方 → 选择上方图片；滑向下方 → 选择下方图片；取消区域 → 不触发</li>
+ *     <li>答题后底部切换为结果反馈 + 下一题按钮</li>
  * </ul>
  */
 public class ImageChallengeFragment extends Fragment {
@@ -32,8 +36,13 @@ public class ImageChallengeFragment extends Fragment {
     private FragmentImageChallengeBinding binding;
     private ChallengeViewModel viewModel;
 
-    /** 标记当前是否已答题（防止重复点击）. */
+    /** 标记当前是否已答题（防止重复操作）. */
     private boolean hasAnswered = false;
+
+    /** 当前题目的上图路径，用于全屏查看. */
+    private String currentLeftImagePath;
+    /** 当前题目的下图路径，用于全屏查看. */
+    private String currentRightImagePath;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -66,15 +75,27 @@ public class ImageChallengeFragment extends Fragment {
 
         // 下一题
         binding.btnNext.setOnClickListener(v -> {
-            binding.btnNext.setVisibility(View.GONE);
-            hideResult();
+            hideResultArea();
             viewModel.nextQuestion();
         });
 
-        // 上图点击
-        binding.containerLeft.setOnClickListener(v -> onUserSelectSide(0));
-        // 下图点击
-        binding.containerRight.setOnClickListener(v -> onUserSelectSide(1));
+        // 点击图片：全屏查看
+        binding.containerLeft.setOnClickListener(v -> openImageViewer(currentLeftImagePath));
+        binding.containerRight.setOnClickListener(v -> openImageViewer(currentRightImagePath));
+
+        // 海胆选择控件
+        binding.seaUrchinSelect.setOnSelectListener(new SeaUrchinSelectView.OnSelectListener() {
+            @Override
+            public void onSelect(int side) {
+                // side: 0=上图(left), 1=下图(right)
+                onUserSelectSide(side);
+            }
+
+            @Override
+            public void onHover(int hoveredSide) {
+                updateSelectionHighlight(hoveredSide);
+            }
+        });
     }
 
     // ---------- 数据观察 ----------
@@ -99,7 +120,7 @@ public class ImageChallengeFragment extends Fragment {
             if (question == null) return;
             hasAnswered = false;
             // 切换到答题状态
-            binding.layoutWaiting.setVisibility(View.GONE);
+            binding.scrollWaiting.setVisibility(View.GONE);
             binding.layoutPlaying.setVisibility(View.VISIBLE);
             showQuestion(question);
         });
@@ -155,27 +176,43 @@ public class ImageChallengeFragment extends Fragment {
         binding.tvLeftLabel.setVisibility(View.GONE);
         binding.tvRightLabel.setVisibility(View.GONE);
 
-        ImageLoader.loadFromAssets(requireContext(), binding.ivLeft, question.getLeftImagePath());
-        ImageLoader.loadFromAssets(requireContext(), binding.ivRight, question.getRightImagePath());
+        currentLeftImagePath = question.getLeftImagePath();
+        currentRightImagePath = question.getRightImagePath();
+
+        ImageLoader.loadFromAssets(requireContext(), binding.ivLeft, currentLeftImagePath);
+        ImageLoader.loadFromAssets(requireContext(), binding.ivRight, currentRightImagePath);
 
         binding.tvDescription.setText(question.getDescription());
         binding.tvDescription.setVisibility(View.VISIBLE);
 
-        binding.cardResult.setVisibility(View.GONE);
-        binding.btnNext.setVisibility(View.GONE);
-
-        binding.containerLeft.setEnabled(true);
-        binding.containerRight.setEnabled(true);
+        // 显示底部操作区（海胆选择）
+        binding.layoutBottomAction.setVisibility(View.VISIBLE);
+        showSelectArea();
     }
 
     /**
-     * 用户选择某一侧，提交答案.
+     * 打开全屏图片查看器.
      *
-     * @param side 0=上图, 1=下图
+     * @param imagePath assets 图片路径
+     */
+    private void openImageViewer(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) return;
+        Intent intent = new Intent(requireContext(), ImageViewerActivity.class);
+        intent.putExtra(ImageViewerActivity.EXTRA_IMAGE_PATH, imagePath);
+        startActivity(intent);
+    }
+
+    /**
+     * 用户通过海胆控件选择某一侧，提交答案.
+     *
+     * @param side 0=上图(left), 1=下图(right)
      */
     private void onUserSelectSide(int side) {
         if (hasAnswered) return;
         hasAnswered = true;
+
+        // 清除高亮
+        updateSelectionHighlight(-1);
 
         if (side == 0) {
             binding.containerLeft.setBackground(
@@ -185,17 +222,50 @@ public class ImageChallengeFragment extends Fragment {
                     requireContext().getDrawable(R.drawable.bg_image_selected));
         }
 
-        binding.containerLeft.setEnabled(false);
-        binding.containerRight.setEnabled(false);
-
         viewModel.submitAnswer(side);
+    }
+
+    /**
+     * 更新海胆悬停高亮（绿色边框）.
+     *
+     * @param hoveredSide 0=上图高亮, 1=下图高亮, -1=无高亮
+     */
+    private void updateSelectionHighlight(int hoveredSide) {
+        binding.containerLeft.setBackground(
+                requireContext().getDrawable(
+                        hoveredSide == 0
+                                ? R.drawable.bg_image_highlight
+                                : R.drawable.bg_image_unselected));
+        binding.containerRight.setBackground(
+                requireContext().getDrawable(
+                        hoveredSide == 1
+                                ? R.drawable.bg_image_highlight
+                                : R.drawable.bg_image_unselected));
+    }
+
+    /** 显示海胆选择区域，隐藏结果区域. */
+    private void showSelectArea() {
+        binding.layoutSelectArea.setVisibility(View.VISIBLE);
+        binding.layoutResultArea.setVisibility(View.GONE);
+    }
+
+    /** 显示结果区域，隐藏海胆选择区域. */
+    private void showResultArea() {
+        binding.layoutSelectArea.setVisibility(View.GONE);
+        binding.layoutResultArea.setVisibility(View.VISIBLE);
+    }
+
+    private void hideResultArea() {
+        binding.layoutResultArea.setVisibility(View.GONE);
+        hasAnswered = false;
     }
 
     /**
      * 展示答题结果反馈.
      */
     private void showResult(ChallengeViewModel.AnswerResult result) {
-        binding.cardResult.setVisibility(View.VISIBLE);
+        // 切换底部区域为结果显示
+        showResultArea();
 
         if (result.correct) {
             binding.tvResult.setText(getString(R.string.result_correct));
@@ -231,11 +301,6 @@ public class ImageChallengeFragment extends Fragment {
         binding.tvRightLabel.setVisibility(View.VISIBLE);
     }
 
-    private void hideResult() {
-        binding.cardResult.setVisibility(View.GONE);
-        hasAnswered = false;
-    }
-
     /**
      * 展示本轮结束弹窗.
      *
@@ -246,7 +311,6 @@ public class ImageChallengeFragment extends Fragment {
                 ? viewModel.getQuizProgress().getValue().total
                 : correctCount;
 
-        // 正确率（整数百分比）
         int accuracyPct = total > 0 ? Math.round(correctCount * 100f / total) : 0;
         String accuracyStr = String.valueOf(accuracyPct);
 
@@ -287,7 +351,6 @@ public class ImageChallengeFragment extends Fragment {
                 .setMessage(getString(R.string.no_more_questions_msg, totalCount))
                 .setPositiveButton(getString(R.string.no_more_questions_reset), (dialog, which) -> {
                     viewModel.resetQuestionBank();
-                    // 重置后回到等待状态，undoneCount LiveData 会自动更新等待页显示
                     resetToWaitingState();
                 })
                 .setNegativeButton(getString(R.string.no_more_questions_back),
@@ -315,7 +378,7 @@ public class ImageChallengeFragment extends Fragment {
     private void resetToWaitingState() {
         hasAnswered = false;
         viewModel.resetSession();
-        binding.layoutWaiting.setVisibility(View.VISIBLE);
+        binding.scrollWaiting.setVisibility(View.VISIBLE);
         binding.layoutPlaying.setVisibility(View.GONE);
         binding.tvNoQuestions.setVisibility(View.GONE);
         resetPlayingArea();
@@ -329,8 +392,7 @@ public class ImageChallengeFragment extends Fragment {
         binding.containerRight.setVisibility(View.GONE);
         binding.layoutProgress.setVisibility(View.GONE);
         binding.tvDescription.setVisibility(View.GONE);
-        binding.cardResult.setVisibility(View.GONE);
-        binding.btnNext.setVisibility(View.GONE);
+        binding.layoutBottomAction.setVisibility(View.GONE);
         binding.layoutLoading.setVisibility(View.GONE);
     }
 
@@ -338,7 +400,6 @@ public class ImageChallengeFragment extends Fragment {
      * 导航回首页.
      */
     private void navigateBackToHome() {
-        // 先重置 session，避免下次进入时残留状态
         viewModel.resetSession();
         if (getView() != null) {
             Navigation.findNavController(getView())

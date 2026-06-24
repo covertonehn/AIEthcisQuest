@@ -116,12 +116,16 @@ public class MainActivity extends AppCompatActivity {
         if (destination == null) return;
         int destId = destination.getId();
 
-        if (destId == R.id.homeFragment || destId == R.id.imageChallengeFragment) {
+        if (destId == R.id.homeFragment
+                || destId == R.id.imageChallengeFragment
+                || destId == R.id.videoChallengeFragment) {
             binding.bottomNav.getMenu().findItem(R.id.homeFragment).setChecked(true);
         } else if (destId == R.id.profileFragment
                 || destId == R.id.wrongBookFragment
                 || destId == R.id.sessionHistoryFragment
-                || destId == R.id.sessionDetailFragment) {
+                || destId == R.id.sessionDetailFragment
+                || destId == R.id.videoSessionHistoryFragment
+                || destId == R.id.videoSessionDetailFragment) {
             binding.bottomNav.getMenu().findItem(R.id.profileFragment).setChecked(true);
         }
     }

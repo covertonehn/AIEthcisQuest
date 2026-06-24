@@ -17,7 +17,7 @@ import com.aiethicsquest.databinding.FragmentHomeBinding;
  * 首页 Fragment：玩法入口卡片列表.
  *
  * <p>展示所有可用的玩法卡片，点击卡片后导航到对应玩法页面。
- * 目前包含：识图挑战。后续可在此处继续添加更多玩法卡片。</p>
+ * 目前包含：识图挑战、视频挑战。后续可在此处继续添加更多玩法卡片。</p>
  */
 public class HomeFragment extends Fragment {
 
@@ -45,6 +45,12 @@ public class HomeFragment extends Fragment {
         binding.cardImageChallenge.setOnClickListener(v ->
                 Navigation.findNavController(v)
                         .navigate(R.id.action_homeFragment_to_imageChallengeFragment)
+        );
+
+        // 视频挑战卡片 → 导航到视频挑战页
+        binding.cardVideoChallenge.setOnClickListener(v ->
+                Navigation.findNavController(v)
+                        .navigate(R.id.action_homeFragment_to_videoChallengeFragment)
         );
     }
 

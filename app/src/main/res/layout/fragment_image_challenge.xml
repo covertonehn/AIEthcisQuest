@@ -4,406 +4,461 @@
 
     包含两个状态区：
     1. layout_waiting  — 等待开始（显示玩法说明、题目数、重置按钮、开始按钮）
-    2. layout_playing  — 答题中（进度、题目描述、双图、结果反馈、下一题按钮）
+    2. layout_playing  — 答题中（进度、题目描述、双图、底部操作区）
+
+    底部操作区有两个子状态：
+    - layout_select_area：答题中，显示海胆选择控件
+    - layout_result_area：答题后，显示答题结果反馈 + 下一题按钮
 -->
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:background="@color/color_background">
 
-    <LinearLayout
+    <!-- ===== 等待开始区域 ===== -->
+    <ScrollView
+        android:id="@+id/scroll_waiting"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/spacing_medium"
-        android:paddingTop="@dimen/spacing_small"
-        android:paddingBottom="@dimen/spacing_medium">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:visibility="visible">
 
-        <!-- ===== 等待开始区域 ===== -->
         <LinearLayout
-            android:id="@+id/layout_waiting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:paddingHorizontal="@dimen/spacing_medium"
+            android:paddingTop="@dimen/spacing_small"
+            android:paddingBottom="@dimen/spacing_medium">
 
-            <!-- 标题区域 -->
             <LinearLayout
+                android:id="@+id/layout_waiting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
-                android:paddingVertical="@dimen/spacing_large">
+                android:visibility="visible">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🖼️"
-                    android:textSize="48sp"
-                    android:layout_marginBottom="@dimen/spacing_small" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/challenge_page_title"
-                    android:textSize="@dimen/text_size_title"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/spacing_xsmall" />
-
-            </LinearLayout>
-
-            <!-- 本轮信息卡片 -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="@dimen/card_elevation"
-                app:cardBackgroundColor="@color/color_card_bg">
-
+                <!-- 标题区域 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/spacing_large">
+                    android:gravity="center_horizontal"
+                    android:paddingVertical="@dimen/spacing_large">
 
-                    <!-- 本轮题目数 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🖼️"
+                        android:textSize="48sp"
+                        android:layout_marginBottom="@dimen/spacing_small" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/challenge_page_title"
+                        android:textSize="@dimen/text_size_title"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/spacing_xsmall" />
+
+                </LinearLayout>
+
+                <!-- 本轮信息卡片 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardElevation="@dimen/card_elevation"
+                    app:cardBackgroundColor="@color/color_card_bg">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="@dimen/spacing_small">
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_large">
+
+                        <!-- 本轮题目数 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginBottom="@dimen/spacing_small">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="📊"
+                                android:textSize="18sp"
+                                android:layout_marginEnd="@dimen/spacing_small" />
+
+                            <TextView
+                                android:id="@+id/tv_next_count"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="@dimen/text_size_subtitle"
+                                android:textStyle="bold"
+                                tools:text="本轮题目数：10 题" />
+
+                        </LinearLayout>
+
+                        <!-- 剩余题目数 -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🗂️"
+                                android:textSize="18sp"
+                                android:layout_marginEnd="@dimen/spacing_small" />
+
+                            <TextView
+                                android:id="@+id/tv_remaining"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:textSize="@dimen/text_size_body"
+                                android:textColor="@color/color_hint_text"
+                                tools:text="剩余未做：20 题" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- 玩法说明卡片 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_large"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardElevation="@dimen/card_elevation"
+                    app:cardBackgroundColor="@color/color_card_bg">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_large">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="📊"
-                            android:textSize="18sp"
-                            android:layout_marginEnd="@dimen/spacing_small" />
+                            android:text="@string/challenge_how_to_play_title"
+                            android:textSize="@dimen/text_size_body"
+                            android:textStyle="bold"
+                            android:textColor="@color/purple_700"
+                            android:layout_marginBottom="@dimen/spacing_small" />
 
                         <TextView
-                            android:id="@+id/tv_next_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/challenge_how_to_play_content"
+                            android:textSize="@dimen/text_size_body"
+                            android:textColor="@color/color_hint_text"
+                            android:lineSpacingMultiplier="1.5" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- 按钮区 -->
+                <Button
+                    android:id="@+id/btn_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/challenge_btn_start"
+                    android:layout_marginBottom="@dimen/spacing_small" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_reset_bank"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/challenge_btn_reset_bank"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    app:strokeColor="@color/color_hint_text" />
+
+            </LinearLayout>
+
+            <!-- 暂无题目提示 -->
+            <TextView
+                android:id="@+id/tv_no_questions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/challenge_no_questions"
+                android:textSize="@dimen/text_size_body"
+                android:textColor="@color/color_hint_text"
+                android:gravity="center"
+                android:padding="@dimen/spacing_xlarge"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- ===== 答题中区域 ===== -->
+    <LinearLayout
+        android:id="@+id/layout_playing"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- 进度区域 -->
+        <LinearLayout
+            android:id="@+id/layout_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/spacing_medium"
+            android:paddingTop="@dimen/spacing_small"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_body"
+                android:textColor="@color/color_hint_text"
+                android:gravity="center"
+                tools:text="第 1 题 / 共 10 题" />
+
+        </LinearLayout>
+
+        <!-- 题目描述 -->
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/challenge_subtitle"
+            android:textSize="@dimen/text_size_subtitle"
+            android:textColor="@color/color_hint_text"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/spacing_medium"
+            android:paddingVertical="@dimen/spacing_small"
+            android:visibility="gone" />
+
+        <!-- 上图容器 -->
+        <FrameLayout
+            android:id="@+id/container_left"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/spacing_medium"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:background="@drawable/bg_image_unselected"
+            android:padding="@dimen/quiz_image_border_width"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_left"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/label_top_image"
+                    android:background="@color/color_image_placeholder"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_left_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="@dimen/spacing_small"
+                android:paddingHorizontal="@dimen/quiz_result_label_padding_h"
+                android:paddingVertical="@dimen/quiz_result_label_padding_v"
+                android:background="@drawable/bg_label_ai"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="AI生成" />
+
+        </FrameLayout>
+
+        <!-- 下图容器 -->
+        <FrameLayout
+            android:id="@+id/container_right"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/spacing_medium"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:background="@drawable/bg_image_unselected"
+            android:padding="@dimen/quiz_image_border_width"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_right"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/label_bottom_image"
+                    android:background="@color/color_image_placeholder"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_right_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="@dimen/spacing_small"
+                android:paddingHorizontal="@dimen/quiz_result_label_padding_h"
+                android:paddingVertical="@dimen/quiz_result_label_padding_v"
+                android:background="@drawable/bg_label_ai"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:text="真实拍摄" />
+
+        </FrameLayout>
+
+        <!-- 加载状态（题目加载中） -->
+        <LinearLayout
+            android:id="@+id/layout_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/spacing_medium"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_small" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/challenge_loading"
+                android:textColor="@color/color_hint_text" />
+
+        </LinearLayout>
+
+        <!-- ===== 底部操作区 ===== -->
+        <FrameLayout
+            android:id="@+id/layout_bottom_action"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:visibility="gone">
+
+            <!-- 答题中：海胆选择区 -->
+            <FrameLayout
+                android:id="@+id/layout_select_area"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+                <com.aiethicsquest.presentation.activity.SeaUrchinSelectView
+                    android:id="@+id/sea_urchin_select"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
+            <!-- 答题后：结果反馈 + 下一题按钮 -->
+            <LinearLayout
+                android:id="@+id/layout_result_area"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingHorizontal="@dimen/spacing_medium"
+                android:visibility="gone">
+
+                <!-- 结果文字卡片 -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    app:cardCornerRadius="@dimen/card_corner_radius"
+                    app:cardElevation="@dimen/card_elevation">
+
+                    <LinearLayout
+                        android:id="@+id/layout_result_inner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/spacing_small"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_result"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="@dimen/text_size_subtitle"
                             android:textStyle="bold"
-                            tools:text="本轮题目数：10 题" />
-
-                    </LinearLayout>
-
-                    <!-- 剩余题目数 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                            tools:text="✓ 答对了！" />
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🗂️"
-                            android:textSize="18sp"
-                            android:layout_marginEnd="@dimen/spacing_small" />
-
-                        <TextView
-                            android:id="@+id/tv_remaining"
+                            android:id="@+id/tv_result_hint"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="@dimen/text_size_body"
-                            android:textColor="@color/color_hint_text"
-                            tools:text="剩余未做：20 题" />
+                            android:gravity="end"
+                            tools:text="你的 AI 识别能力很强！" />
 
                     </LinearLayout>
 
-                </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-            </androidx.cardview.widget.CardView>
-
-            <!-- 玩法说明卡片 -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_large"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="@dimen/card_elevation"
-                app:cardBackgroundColor="@color/color_card_bg">
-
-                <LinearLayout
+                <!-- 下一题按钮 -->
+                <Button
+                    android:id="@+id/btn_next"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_large">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/challenge_how_to_play_title"
-                        android:textSize="@dimen/text_size_body"
-                        android:textStyle="bold"
-                        android:textColor="@color/purple_700"
-                        android:layout_marginBottom="@dimen/spacing_small" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/challenge_how_to_play_content"
-                        android:textSize="@dimen/text_size_body"
-                        android:textColor="@color/color_hint_text"
-                        android:lineSpacingMultiplier="1.5" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- 按钮区 -->
-            <Button
-                android:id="@+id/btn_start"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/min_touch_target"
-                android:text="@string/challenge_btn_start"
-                android:layout_marginBottom="@dimen/spacing_small" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_reset_bank"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/min_touch_target"
-                android:text="@string/challenge_btn_reset_bank"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:strokeColor="@color/color_hint_text" />
-
-        </LinearLayout>
-
-        <!-- ===== 答题中区域 ===== -->
-        <LinearLayout
-            android:id="@+id/layout_playing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <!-- 进度区域 -->
-            <LinearLayout
-                android:id="@+id/layout_progress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <TextView
-                    android:id="@+id/tv_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_body"
-                    android:textColor="@color/color_hint_text"
-                    android:gravity="center"
-                    tools:text="第 1 题 / 共 10 题" />
+                    android:minHeight="@dimen/min_touch_target"
+                    android:text="@string/challenge_btn_next" />
 
             </LinearLayout>
 
-            <!-- 题目描述 -->
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/challenge_subtitle"
-                android:textSize="@dimen/text_size_subtitle"
-                android:textColor="@color/color_hint_text"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:visibility="gone" />
-
-            <!-- 上图容器（16:9 横向比例，fitCenter 完整显示） -->
-            <FrameLayout
-                android:id="@+id/container_left"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_small"
-                android:background="@drawable/bg_image_unselected"
-                android:padding="@dimen/quiz_image_border_width"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/iv_left"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/label_top_image"
-                        android:background="@color/color_image_placeholder"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintDimensionRatio="16:9" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <TextView
-                    android:id="@+id/tv_left_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|start"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:paddingHorizontal="@dimen/quiz_result_label_padding_h"
-                    android:paddingVertical="@dimen/quiz_result_label_padding_v"
-                    android:background="@drawable/bg_label_ai"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_caption"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:text="AI生成" />
-
-            </FrameLayout>
-
-            <!-- 下图容器 -->
-            <FrameLayout
-                android:id="@+id/container_right"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:background="@drawable/bg_image_unselected"
-                android:padding="@dimen/quiz_image_border_width"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/iv_right"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/label_bottom_image"
-                        android:background="@color/color_image_placeholder"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintDimensionRatio="16:9" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <TextView
-                    android:id="@+id/tv_right_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|start"
-                    android:layout_margin="@dimen/spacing_small"
-                    android:paddingHorizontal="@dimen/quiz_result_label_padding_h"
-                    android:paddingVertical="@dimen/quiz_result_label_padding_v"
-                    android:background="@drawable/bg_label_ai"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_caption"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    tools:text="真实拍摄" />
-
-            </FrameLayout>
-
-            <!-- 答题结果反馈条 -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                app:cardCornerRadius="@dimen/card_corner_radius"
-                app:cardElevation="@dimen/card_elevation"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <LinearLayout
-                    android:id="@+id/layout_result_inner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_medium"
-                    android:gravity="center">
-
-                    <TextView
-                        android:id="@+id/tv_result"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_result"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/spacing_xsmall"
-                        tools:text="✓ 答对了！" />
-
-                    <TextView
-                        android:id="@+id/tv_result_hint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size_body"
-                        tools:text="你的 AI 识别能力很强！" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- 加载状态 -->
-            <LinearLayout
-                android:id="@+id/layout_loading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="@dimen/spacing_xlarge"
-                android:visibility="gone">
-
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/challenge_loading"
-                    android:textColor="@color/color_hint_text" />
-
-            </LinearLayout>
-
-            <!-- 操作按钮 -->
-            <Button
-                android:id="@+id/btn_next"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="@dimen/min_touch_target"
-                android:text="@string/challenge_btn_next"
-                android:visibility="gone" />
-
-        </LinearLayout>
-
-        <!-- 暂无题目提示（在等待区域之外，任何状态下都可能显示） -->
-        <TextView
-            android:id="@+id/tv_no_questions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/challenge_no_questions"
-            android:textSize="@dimen/text_size_body"
-            android:textColor="@color/color_hint_text"
-            android:gravity="center"
-            android:padding="@dimen/spacing_xlarge"
-            android:visibility="gone" />
+        </FrameLayout>
 
     </LinearLayout>
 
-</ScrollView>
+</LinearLayout>
 

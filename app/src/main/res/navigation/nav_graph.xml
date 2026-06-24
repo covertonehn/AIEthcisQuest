@@ -7,7 +7,7 @@
 
     <!--
         首页：玩法入口卡片列表（底部导航栏 Tab）
-        → 可导航到：识图挑战页
+        → 可导航到：识图挑战页、视频挑战页
     -->
     <fragment
         android:id="@+id/homeFragment"
@@ -18,6 +18,14 @@
         <action
             android:id="@+id/action_homeFragment_to_imageChallengeFragment"
             app:destination="@id/imageChallengeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_videoChallengeFragment"
+            app:destination="@id/videoChallengeFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -35,8 +43,17 @@
         tools:layout="@layout/fragment_image_challenge" />
 
     <!--
+        视频挑战玩法页（由首页进入）
+    -->
+    <fragment
+        android:id="@+id/videoChallengeFragment"
+        android:name="com.aiethicsquest.presentation.fragment.VideoChallengeFragment"
+        android:label="@string/video_challenge_page_title"
+        tools:layout="@layout/fragment_video_challenge" />
+
+    <!--
         个人中心页（底部导航栏 Tab）
-        → 可导航到：错题本页、挑战历史列表页
+        → 可导航到：错题本页、识图挑战历史列表页、视频挑战历史列表页
     -->
     <fragment
         android:id="@+id/profileFragment"
@@ -60,6 +77,14 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
+        <action
+            android:id="@+id/action_profileFragment_to_videoSessionHistoryFragment"
+            app:destination="@id/videoSessionHistoryFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     </fragment>
 
     <!--
@@ -72,8 +97,8 @@
         tools:layout="@layout/fragment_wrong_book" />
 
     <!--
-        挑战历史列表页（由个人中心进入）
-        → 可导航到：挑战历史详情页
+        识图挑战历史列表页（由个人中心进入）
+        → 可导航到：识图挑战历史详情页
     -->
     <fragment
         android:id="@+id/sessionHistoryFragment"
@@ -92,12 +117,41 @@
     </fragment>
 
     <!--
-        挑战历史详情页（由历史列表页进入）
+        识图挑战历史详情页（由识图历史列表页进入）
     -->
     <fragment
         android:id="@+id/sessionDetailFragment"
         android:name="com.aiethicsquest.presentation.fragment.SessionDetailFragment"
         android:label="@string/history_detail_title"
+        tools:layout="@layout/fragment_session_detail" />
+
+    <!--
+        视频挑战历史列表页（由个人中心进入）
+        → 可导航到：视频挑战历史详情页
+    -->
+    <fragment
+        android:id="@+id/videoSessionHistoryFragment"
+        android:name="com.aiethicsquest.presentation.fragment.VideoSessionHistoryFragment"
+        android:label="@string/profile_video_history_title"
+        tools:layout="@layout/fragment_session_history">
+
+        <action
+            android:id="@+id/action_videoSessionHistoryFragment_to_videoSessionDetailFragment"
+            app:destination="@id/videoSessionDetailFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+    </fragment>
+
+    <!--
+        视频挑战历史详情页（由视频历史列表页进入）
+    -->
+    <fragment
+        android:id="@+id/videoSessionDetailFragment"
+        android:name="com.aiethicsquest.presentation.fragment.VideoSessionDetailFragment"
+        android:label="@string/video_history_detail_title"
         tools:layout="@layout/fragment_session_detail" />
 
 </navigation>

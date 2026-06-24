@@ -30,6 +30,14 @@
             android:exported="false"
             android:theme="@style/Theme.AIEthicsQuest.Fullscreen" />
 
+        <!-- 视频全屏播放页 -->
+        <activity
+            android:name=".presentation.activity.VideoViewerActivity"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/Theme.AIEthicsQuest.Fullscreen" />
+
     </application>
 
 </manifest>

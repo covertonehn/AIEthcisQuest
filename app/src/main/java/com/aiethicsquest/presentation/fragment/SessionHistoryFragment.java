@@ -39,7 +39,8 @@ public class SessionHistoryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        // 使用 Activity 作用域，与其他个人中心 Fragment 共享同一 ViewModel 实例
+        viewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         initViews();
         observeData();
     }

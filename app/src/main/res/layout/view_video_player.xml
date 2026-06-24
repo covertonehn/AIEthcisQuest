@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    内联视频播放器布局.
+    包含 TextureView 播放区域、中央播放图标覆盖层、加载进度条、底部控制栏（播放/暂停、播放进度条、全屏按钮）.
+    TextureView 不支持 background 属性，黑色背景由父容器 VideoPlayerView 提供.
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 视频渲染区域（TextureView 不支持 background 属性，背景由父容器 VideoPlayerView 提供） -->
+    <TextureView
+        android:id="@+id/texture_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
+    <!-- 首帧缩略图（视频准备好但未播放时，覆盖在 TextureView 上方展示首帧画面） -->
+    <ImageView
+        android:id="@+id/iv_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <!-- 中央播放图标覆盖层（未播放时显示） -->
+    <FrameLayout
+        android:id="@+id/overlay_play_icon"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="#33000000"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_video_play_circle"
+            android:contentDescription="@string/video_play_hint" />
+
+    </FrameLayout>
+
+    <!-- 加载 Spinner（正在缓冲时显示，居中在视频区域中） -->
+    <ProgressBar
+        android:id="@+id/progress_bar_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <!-- 底部控制栏（播放/暂停 + 播放进度条 + 全屏按钮） -->
+    <LinearLayout
+        android:id="@+id/layout_controls"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:background="#AA000000"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <!-- 播放/暂停按钮 -->
+        <ImageButton
+            android:id="@+id/btn_play_pause"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/video_play_pause_hint"
+            android:src="@drawable/ic_video_play"
+            android:tint="@color/white" />
+
+        <!-- 播放进度条（SeekBar） -->
+        <SeekBar
+            android:id="@+id/seek_bar_video"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:thumbTint="@color/white"
+            android:progressTint="@color/white"
+            android:progressBackgroundTint="#66FFFFFF" />
+
+        <!-- 全屏按钮 -->
+        <ImageButton
+            android:id="@+id/btn_fullscreen"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/video_fullscreen_hint"
+            android:src="@drawable/ic_video_fullscreen"
+            android:tint="@color/white" />
+
+    </LinearLayout>
+
+</merge>
+
